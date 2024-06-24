@@ -51,5 +51,25 @@ Blockchain.prototype.addBlock = function(newBlock) {
 
 // Method to validate the blocks of chain
 Blockchain.prototype.isChainValid = function(){
-    
+    for (let i = 1; i < this.chain.length; i++){
+        const currentBlock = this.chain[i];
+        const previousBlock = this.chain[i - 1];
+
+        if (currentBlock.hash !== currentBlock.calculateHash()) {
+            return false;
+        }
+
+        if (currentBlock.previousHash !== previousBlock.hash) {
+            return false;
+        }
+
+        return true;
+    }
 }
+
+const myBlockchain = new Blockchain();
+myBlockchain.addBlock(new Block(1, myBlockchain.getLatestBlock().hash, { amount: 4 }));
+myBlockchain.addBlock(new Block(2, myBlockchain.getLatestBlock().hash, { amount: 10 }));
+
+console.log(JSON.stringify(myBlockchain, null, 4));
+console.log('Is blockchain valid? ' + myBlockchain.isChainValid());
